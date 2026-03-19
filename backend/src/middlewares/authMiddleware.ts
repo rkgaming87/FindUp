@@ -8,7 +8,7 @@ export async function isLogedIn(
   next: NextFunction,
 ) {
   try {
-    const token = req.cookies["access-token"];
+    const token = req.cookies["token"];
     if (!token) {
       // console.log("No token found in cookies");
       return res.status(401).json({
@@ -25,7 +25,12 @@ export async function isLogedIn(
     next();
   } catch (err: unknown) {
     console.error("isLogedIn Error:", (err as Error).message);
-    res.clearCookie("access-token", { path: "/" });
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      path: "/",
+    });
     if ((err as Error).message == "jwt expired") {
       return res.status(401).json({
         message: "Session Expired!",

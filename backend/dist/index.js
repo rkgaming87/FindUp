@@ -128,11 +128,12 @@ async function login(req, res) {
         algorithm: "HS256"
       }
     );
-    return res.cookie("access-token", token, {
+    return res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
-      // Since we are on http://localhost
-      sameSite: "lax",
+      secure: true,
+      // required for HTTPS (Render + Vercel)
+      sameSite: "none",
+      // REQUIRED for cross-origin
       maxAge: 36e5,
       // 1 hour
       path: "/"
@@ -149,7 +150,12 @@ async function login(req, res) {
 }
 async function logout(req, res) {
   try {
-    res.clearCookie("access-token").send({
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      path: "/"
+    }).send({
       message: "Logout successful!"
     });
   } catch (e) {
@@ -164,7 +170,7 @@ async function logout(req, res) {
 import jwt2 from "jsonwebtoken";
 async function isLogedIn(req, res, next) {
   try {
-    const token = req.cookies["access-token"];
+    const token = req.cookies["token"];
     if (!token) {
       return res.status(401).json({
         authenticated: false,
@@ -179,7 +185,12 @@ async function isLogedIn(req, res, next) {
     next();
   } catch (err) {
     console.error("isLogedIn Error:", err.message);
-    res.clearCookie("access-token", { path: "/" });
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      path: "/"
+    });
     if (err.message == "jwt expired") {
       return res.status(401).json({
         message: "Session Expired!"
@@ -1250,7 +1261,7 @@ var app = express8();
 var PORT = process.env.PORT || 8005;
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:3001", "http://127.0.0.1:3001"],
+    origin: ["http://localhost:3000", "https://findup-tau.vercel.app"],
     credentials: true
   })
 );

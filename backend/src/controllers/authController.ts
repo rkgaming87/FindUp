@@ -85,10 +85,10 @@ async function login(req: Request, res: Response) {
         algorithm: "HS256",
       },
     );
-    return res.cookie("access-token", token, {
+    return res.cookie("token", token, {
       httpOnly: true,
-      secure: false, // Since we are on http://localhost
-      sameSite: "lax",
+      secure: true, // required for HTTPS (Render + Vercel)
+      sameSite: "none", // REQUIRED for cross-origin
       maxAge: 3600000, // 1 hour
       path: "/",
     }).send({
@@ -108,7 +108,12 @@ async function login(req: Request, res: Response) {
 
 async function logout(req: Request, res: Response) {
   try {
-    res.clearCookie("access-token").send({
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      path: "/",
+    }).send({
       message: "Logout successful!",
     });
   } catch (e) {
