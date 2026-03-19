@@ -17,6 +17,7 @@ import {
 } from "lucide-react"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
+import { useAuth } from "@/context/AuthContext"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
@@ -72,6 +73,7 @@ const getCategoryIcon = (category: string) => {
 export default function ItemDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
   const router = useRouter()
+  const { user } = useAuth()
   const [item, setItem] = useState<Item | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -283,7 +285,18 @@ export default function ItemDetailsPage({ params }: { params: Promise<{ id: stri
                         {item.type === "found" && (
                           <Dialog open={isClaimDialogOpen} onOpenChange={setIsClaimDialogOpen}>
                             <DialogTrigger asChild>
-                              <Button size="lg">Claim This Item</Button>
+                              <Button 
+                                size="lg" 
+                                onClick={(e) => {
+                                  if (!user) {
+                                    e.preventDefault();
+                                    router.push(`/login?callback=/items/${item._id}`);
+                                    toast.error("Please log in to claim this item.");
+                                  }
+                                }}
+                              >
+                                Claim This Item
+                              </Button>
                             </DialogTrigger>
                             <DialogContent className="sm:max-w-lg">
                               {!isClaimSubmitted ? (

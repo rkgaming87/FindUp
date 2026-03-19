@@ -4,7 +4,7 @@ import React from "react";
 
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Search, Eye, EyeOff, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,8 @@ import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callback = searchParams.get("callback");
   const { refreshUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -53,7 +55,7 @@ export default function LoginPage() {
       const data = await loginUser(formData);
       await refreshUser();
       toast.success("Login successfully!");
-      router.replace("/dashboard");
+      router.replace(callback || "/dashboard");
     } catch (error: any) {
       setServerError(error);
       toast.error(error);
