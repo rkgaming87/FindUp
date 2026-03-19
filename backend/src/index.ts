@@ -13,6 +13,7 @@ import notificationRouter from "../src/Routes/notificationRouter";
 import cors from "cors";
 
 const app = express();
+app.set("trust proxy", 1);
 const PORT = process.env.PORT || 8005;
 
 app.use(
