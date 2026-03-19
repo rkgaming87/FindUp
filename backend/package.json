@@ -9,7 +9,7 @@
     "debug": "node --inspect-brk -r ts-node/register src/index.ts",
     "lint": "npx eslint src",
     "lint:fix": "npx eslint src --fix",
-    "build": "node index.js",
+    "build": "node index.ts",
     "start": "node dist/index.js",
     "build:watch": "esbuild src/index.ts --bundle --platform=node --target=node18 --outfile=dist/index.js --watch"
   },
