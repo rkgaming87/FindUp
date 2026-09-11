@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 
 import Link from "next/link";
 import { useState } from "react";
@@ -13,7 +13,7 @@ import { loginUser } from "@/lib/authContext";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
 
-export default function LoginPage() {
+function LoginFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callback = searchParams.get("callback");
@@ -211,5 +211,19 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      }
+    >
+      <LoginFormContent />
+    </Suspense>
   );
 }
