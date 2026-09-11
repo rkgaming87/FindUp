@@ -1,11 +1,19 @@
 "use client";
 
-import React, { Suspense } from "react";
-
+import React, { Suspense, useState } from "react";
 import Link from "next/link";
-import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Search, Eye, EyeOff, Loader2, AlertCircle } from "lucide-react";
+import {
+  Search,
+  Eye,
+  EyeOff,
+  Loader2,
+  AlertCircle,
+  Sparkles,
+  ArrowRight,
+  ShieldCheck,
+  CheckCircle2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,8 +38,8 @@ function LoginFormContent() {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.username) {
-      newErrors.username = "Username is required";
+    if (!formData.username.trim()) {
+      newErrors.username = "Username or Student ID is required";
     }
 
     if (!formData.password) {
@@ -50,78 +58,135 @@ function LoginFormContent() {
     if (!validateForm()) return;
     setServerError(null);
     setIsLoading(true);
-    // Simulate API call
+
     try {
-      const data = await loginUser(formData);
+      await loginUser(formData);
       await refreshUser();
-      toast.success("Login successfully!");
+      toast.success("Welcome back to FindUp!");
       router.replace(callback || "/dashboard");
     } catch (error: any) {
-      setServerError(error);
-      toast.error(error);
+      const msg = error?.response?.data?.message || error || "Failed to sign in";
+      setServerError(msg);
+      toast.error(msg);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen">
-      {/* Left side - Form */}
-      <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
-        <div className="mx-auto w-full max-w-sm lg:w-96">
-          {/* Logo */}
-          <div className="flex items-center gap-2">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-                <Search className="h-5 w-5 text-primary-foreground" />
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-12 sm:px-6 lg:px-8">
+      {/* Dynamic Ambient Background Glows */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -left-40 h-[500px] w-[500px] rounded-full bg-teal-500/15 blur-3xl" />
+        <div className="absolute -bottom-40 -right-40 h-[500px] w-[500px] rounded-full bg-cyan-500/15 blur-3xl" />
+        <div className="absolute inset-0 bg-grid-pattern opacity-40" />
+      </div>
+
+      <div className="relative w-full max-w-4xl grid gap-8 lg:grid-cols-2 items-center">
+        {/* Left Side: Brand & Benefits */}
+        <div className="hidden lg:flex flex-col justify-between p-8">
+          <div>
+            <Link href="/" className="inline-flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-tr from-teal-600 to-cyan-600 text-white shadow-lg shadow-teal-500/25">
+                <Search className="h-6 w-6" />
               </div>
-              <span className="text-xl font-bold tracking-tight text-foreground">
-                FindUp
+              <span className="text-2xl font-black tracking-tight text-foreground">
+                Find<span className="text-primary">Up</span>
               </span>
+            </Link>
+
+            <h1 className="mt-8 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+              Welcome back to your campus lost & found.
+            </h1>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Sign in to manage reported items, check claim statuses, and connect with finders across IGNOU study centers.
+            </p>
+
+            <div className="mt-8 space-y-4">
+              <div className="flex items-center gap-3 text-sm text-foreground/90">
+                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-500/10 text-teal-600">
+                  <CheckCircle2 className="h-4 w-4" />
+                </div>
+                <span>Fast & secure student verification</span>
+              </div>
+              <div className="flex items-center gap-3 text-sm text-foreground/90">
+                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-600">
+                  <CheckCircle2 className="h-4 w-4" />
+                </div>
+                <span>Real-time claim notifications & alerts</span>
+              </div>
+              <div className="flex items-center gap-3 text-sm text-foreground/90">
+                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600">
+                  <CheckCircle2 className="h-4 w-4" />
+                </div>
+                <span>Campus-wide coverage across 67+ regional centers</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-12 rounded-xl border border-border/40 bg-muted/40 p-4 text-xs text-muted-foreground backdrop-blur-sm">
+            🔒 Protected by student credential verification & SSL encryption.
+          </div>
+        </div>
+
+        {/* Right Side: Auth Glass Card */}
+        <div className="glass-card w-full rounded-3xl p-8 sm:p-10 shadow-2xl shadow-teal-500/10">
+          <div className="lg:hidden mb-6 flex justify-center">
+            <Link href="/" className="inline-flex items-center gap-2.5">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-teal-600 to-cyan-600 text-white">
+                <Search className="h-5 w-5" />
+              </div>
+              <span className="text-xl font-extrabold text-foreground">FindUp</span>
             </Link>
           </div>
 
-          <div className="mt-8">
+          <div className="space-y-1 text-center lg:text-left">
             <h2 className="text-2xl font-bold tracking-tight text-foreground">
-              Welcome back
+              Sign In to Your Account
             </h2>
-            <p className="mt-2 text-sm text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               Don&apos;t have an account?{" "}
               <Link
                 href="/register"
-                className="font-medium text-primary hover:underline"
+                className="font-semibold text-primary hover:underline"
               >
-                Sign up for free
+                Sign up free
               </Link>
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-            {/* username */}
+          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+            {/* Username / ID */}
             <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="username" className="text-xs font-semibold uppercase tracking-wider">
+                Username or Student ID
+              </Label>
               <Input
                 id="username"
                 type="text"
-                placeholder="2352777723"
+                placeholder="e.g., rohit123 or 2352777723"
                 value={formData.username}
                 onChange={(e) =>
                   setFormData({ ...formData, username: e.target.value })
                 }
-                className={errors.username ? "border-destructive" : ""}
+                className={`rounded-xl border-border/60 bg-background/50 text-sm ${
+                  errors.username ? "border-destructive focus-visible:ring-destructive" : ""
+                }`}
               />
               {errors.username && (
-                <p className="text-sm text-destructive">{errors.username}</p>
+                <p className="text-xs text-destructive">{errors.username}</p>
               )}
             </div>
 
             {/* Password */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password" className="text-xs font-semibold uppercase tracking-wider">
+                  Password
+                </Label>
                 <Link
                   href="/forgot-password"
-                  className="text-sm font-medium text-primary hover:underline"
+                  className="text-xs font-medium text-primary hover:underline"
                 >
                   Forgot password?
                 </Link>
@@ -135,9 +200,9 @@ function LoginFormContent() {
                   onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })
                   }
-                  className={
-                    errors.password ? "border-destructive pr-10" : "pr-10"
-                  }
+                  className={`rounded-xl border-border/60 bg-background/50 pr-10 text-sm ${
+                    errors.password ? "border-destructive focus-visible:ring-destructive" : ""
+                  }`}
                 />
                 <button
                   type="button"
@@ -152,62 +217,37 @@ function LoginFormContent() {
                 </button>
               </div>
               {errors.password && (
-                <p className="text-sm text-destructive">{errors.password}</p>
+                <p className="text-xs text-destructive">{errors.password}</p>
               )}
             </div>
 
-            {/* Remember me */}
-
             {/* Server Error Message */}
             {serverError && (
-              <div className="flex items-center gap-2 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
+              <div className="flex items-center gap-2 rounded-xl bg-destructive/10 p-3 text-xs text-destructive border border-destructive/20">
                 <AlertCircle className="h-4 w-4 shrink-0" />
                 <p>{serverError}</p>
               </div>
             )}
 
-            {/* Submit */}
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              className="h-11 w-full gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 font-semibold text-white shadow-lg shadow-teal-500/20 hover:opacity-95"
+              disabled={isLoading}
+            >
               {isLoading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Signing in...
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Signing in...</span>
                 </>
               ) : (
-                "Sign in"
+                <>
+                  <span>Sign In</span>
+                  <ArrowRight className="h-4 w-4" />
+                </>
               )}
             </Button>
           </form>
-        </div>
-      </div>
-
-      {/* Right side - Image/Pattern */}
-      <div className="relative hidden w-0 flex-1 lg:block">
-        <div className="absolute inset-0 bg-primary/5">
-          <div className="flex h-full flex-col items-center justify-center p-12">
-            <div className="max-w-md text-center">
-              <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-2xl bg-primary/10">
-                <Search className="h-10 w-10 text-primary" />
-              </div>
-              <h3 className="text-2xl font-bold text-foreground">
-                Find what you&apos;ve lost
-              </h3>
-              <p className="mt-4 text-muted-foreground">
-                Join thousands of IGNOU students and staff who have successfully
-                recovered their lost belongings through our platform.
-              </p>
-              <div className="mt-8 flex justify-center gap-8 text-center">
-                <div>
-                  <p className="text-2xl font-bold text-primary">85%</p>
-                  <p className="text-sm text-muted-foreground">Recovery rate</p>
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-primary">2,500+</p>
-                  <p className="text-sm text-muted-foreground">Items found</p>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>

@@ -1,54 +1,65 @@
-import Link from "next/link"
-import { Search } from "lucide-react"
+import Link from "next/link";
+import { Search, Heart, Shield, Sparkles, MapPin } from "lucide-react";
 
 const footerLinks = {
   platform: [
-    { label: "About Us", href: "/about" },
-    { label: "Browse Items", href: "/browse" },
+    { label: "Browse Registry", href: "/browse" },
     { label: "Report Lost Item", href: "/dashboard/report" },
-    { label: "How It Works", href: "/how-it-works" },
-    { label: "FAQs", href: "/faqs" },
+    { label: "About FindUp", href: "/about" },
+    { label: "User Dashboard", href: "/dashboard" },
   ],
   support: [
-    { label: "Help Center", href: "/help" },
-    { label: "Contact Us", href: "/contact" },
-    { label: "Report Issue", href: "/report-issue" },
-    { label: "Safety Tips", href: "/safety" },
+    { label: "Help & FAQs", href: "/about" },
+    { label: "Verification Guide", href: "/about" },
+    { label: "Safety & Security", href: "/about" },
   ],
   legal: [
-    { label: "Privacy Policy", href: "/privacy" },
-    { label: "Terms of Service", href: "/terms" },
-    { label: "Cookie Policy", href: "/cookies" },
+    { label: "Privacy Policy", href: "/about" },
+    { label: "Terms of Service", href: "/about" },
+    { label: "Campus Guidelines", href: "/about" },
   ],
-}
+};
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-muted/30">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-          {/* Brand */}
-          <div className="lg:col-span-1">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-                <Search className="h-5 w-5 text-primary-foreground" />
+    <footer className="border-t border-border/40 bg-background/50 backdrop-blur-md">
+      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
+          {/* Brand Column */}
+          <div className="lg:col-span-2">
+            <Link href="/" className="group flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-teal-600 via-cyan-600 to-sky-500 shadow-md shadow-teal-500/20">
+                <Search className="h-5 w-5 text-white" />
               </div>
-              <span className="text-xl font-bold tracking-tight text-foreground">FindUp</span>
+              <div className="flex flex-col">
+                <span className="text-xl font-extrabold tracking-tight text-foreground">
+                  Find<span className="text-primary">Up</span>
+                </span>
+                <span className="text-[10px] font-medium tracking-wider text-muted-foreground uppercase">
+                  IGNOU Lost & Found
+                </span>
+              </div>
             </Link>
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              Helping IGNOU students and staff reunite with their lost belongings through a modern, efficient platform.
+
+            <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
+              A modern, community-driven platform connecting IGNOU students, staff, and regional study centers across India to safely recover misplaced belongings.
             </p>
+
+            <div className="mt-6 flex items-center gap-2 text-xs text-muted-foreground">
+              <MapPin className="h-4 w-4 text-primary shrink-0" />
+              <span>Covering 67+ Regional Centers Nationwide</span>
+            </div>
           </div>
 
           {/* Platform Links */}
           <div>
-            <h3 className="text-sm font-semibold text-foreground">Platform</h3>
-            <ul className="mt-4 space-y-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">Platform</h3>
+            <ul className="mt-4 space-y-2.5">
               {footerLinks.platform.map((link) => (
-                <li key={link.href}>
+                <li key={link.href + link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    className="text-sm text-muted-foreground transition-colors hover:text-primary"
                   >
                     {link.label}
                   </Link>
@@ -59,13 +70,13 @@ export function Footer() {
 
           {/* Support Links */}
           <div>
-            <h3 className="text-sm font-semibold text-foreground">Support</h3>
-            <ul className="mt-4 space-y-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">Support</h3>
+            <ul className="mt-4 space-y-2.5">
               {footerLinks.support.map((link) => (
-                <li key={link.href}>
+                <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    className="text-sm text-muted-foreground transition-colors hover:text-primary"
                   >
                     {link.label}
                   </Link>
@@ -76,13 +87,13 @@ export function Footer() {
 
           {/* Legal Links */}
           <div>
-            <h3 className="text-sm font-semibold text-foreground">Legal</h3>
-            <ul className="mt-4 space-y-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">Trust & Legal</h3>
+            <ul className="mt-4 space-y-2.5">
               {footerLinks.legal.map((link) => (
-                <li key={link.href}>
+                <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    className="text-sm text-muted-foreground transition-colors hover:text-primary"
                   >
                     {link.label}
                   </Link>
@@ -92,16 +103,16 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Bottom */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 md:flex-row">
-          <p className="text-sm text-muted-foreground">
-            2025 FindUp - IGNOU. All rights reserved.
+        {/* Bottom Bar */}
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border/40 pt-8 sm:flex-row">
+          <p className="text-xs text-muted-foreground">
+            &copy; {new Date().getFullYear()} FindUp - IGNOU. All rights reserved.
           </p>
-          <p className="text-sm text-muted-foreground">
-            Made with care for the IGNOU community
+          <p className="flex items-center gap-1 text-xs text-muted-foreground">
+            Built with <Heart className="h-3.5 w-3.5 text-rose-500 fill-rose-500" /> for the IGNOU student community
           </p>
         </div>
       </div>
     </footer>
-  )
+  );
 }

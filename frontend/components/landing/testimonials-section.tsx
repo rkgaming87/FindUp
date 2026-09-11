@@ -1,58 +1,82 @@
-import { Quote } from "lucide-react"
+import { Quote, Star, Sparkles } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const testimonials = [
   {
-    quote: "I lost my laptop bag in the library and thought it was gone forever. Within 3 days, someone had reported finding it and I got everything back!",
+    quote:
+      "I lost my laptop bag with all my project notes in the campus library and thought it was gone forever. Within 2 days, a student posted it on FindUp and I reclaimed everything safely!",
     name: "Priya Sharma",
-    role: "MBA Student, Delhi RC",
+    role: "MBA Student • Delhi Regional Center",
     initials: "PS",
+    stars: 5,
+    gradient: "from-teal-500 to-cyan-500",
   },
   {
-    quote: "As a faculty member, I really appreciate how organized this platform is. It's made managing lost items at our center so much easier.",
+    quote:
+      "As a faculty member, managing lost belongings was cumbersome. FindUp has streamlined lost items at our center with clear identification verification.",
     name: "Dr. Rajesh Kumar",
-    role: "Faculty, Bangalore RC",
+    role: "Faculty Member • Bangalore Center",
     initials: "RK",
+    stars: 5,
+    gradient: "from-cyan-500 to-blue-500",
   },
   {
-    quote: "The notification system is brilliant! I got an alert the moment someone found my ID card. The whole process took less than 24 hours.",
+    quote:
+      "The instant notification alert is a game-changer! I got pinged the moment someone found my hall ticket and student ID before exams began.",
     name: "Amit Patel",
-    role: "BCA Student, Mumbai RC",
+    role: "BCA Student • Mumbai Regional Center",
     initials: "AP",
+    stars: 5,
+    gradient: "from-emerald-500 to-teal-500",
   },
-]
+];
 
 export function TestimonialsSection() {
   return (
-    <section className="bg-background py-20 sm:py-28">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section className="relative overflow-hidden bg-background py-20 sm:py-28">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-wide text-primary">Testimonials</p>
-          <h2 className="mt-2 text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Trusted by the IGNOU community
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-teal-500/30 bg-teal-500/10 px-3.5 py-1 text-xs font-semibold text-teal-600 dark:text-teal-400">
+            <Sparkles className="h-3 w-3" />
+            <span>Community Stories</span>
+          </div>
+          <h2 className="mt-4 text-balance text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+            Trusted by students & faculty across India
           </h2>
-          <p className="mt-4 text-pretty text-lg text-muted-foreground">
-            See what students and staff have to say about their experience with FindUp.
+          <p className="mt-4 text-pretty text-base text-muted-foreground sm:text-lg">
+            Hear from genuine community members who have successfully reclaimed their belongings.
           </p>
         </div>
 
-        {/* Testimonials Grid */}
+        {/* Testimonials Cards Grid */}
         <div className="mt-16 grid gap-8 md:grid-cols-3">
           {testimonials.map((testimonial) => (
             <div
               key={testimonial.name}
-              className="relative rounded-2xl border border-border bg-card p-6 shadow-sm"
+              className="glass-card group relative flex flex-col justify-between overflow-hidden rounded-2xl p-7 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-teal-500/10 hover:border-teal-500/40"
             >
-              <Quote className="mb-4 h-8 w-8 text-primary/30" />
-              <blockquote className="text-sm leading-relaxed text-muted-foreground">
-                {testimonial.quote}
-              </blockquote>
-              <div className="mt-6 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
-                  {testimonial.initials}
+              <div>
+                {/* Rating Stars */}
+                <div className="flex items-center gap-1 text-amber-400 mb-4">
+                  {[...Array(testimonial.stars)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 fill-amber-400" />
+                  ))}
                 </div>
+
+                <blockquote className="text-sm leading-relaxed text-foreground/80 italic">
+                  &ldquo;{testimonial.quote}&rdquo;
+                </blockquote>
+              </div>
+
+              <div className="mt-6 flex items-center gap-3 border-t border-border/40 pt-4">
+                <Avatar className="h-10 w-10 border-2 border-primary/20">
+                  <AvatarFallback className={`bg-gradient-to-tr ${testimonial.gradient} font-bold text-white text-xs`}>
+                    {testimonial.initials}
+                  </AvatarFallback>
+                </Avatar>
                 <div>
-                  <p className="text-sm font-semibold text-foreground">{testimonial.name}</p>
+                  <p className="text-sm font-bold text-foreground">{testimonial.name}</p>
                   <p className="text-xs text-muted-foreground">{testimonial.role}</p>
                 </div>
               </div>
@@ -61,5 +85,5 @@ export function TestimonialsSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

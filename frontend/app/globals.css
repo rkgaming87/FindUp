@@ -123,3 +123,44 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+  }
+  .dark .glass-card {
+    background: rgba(18, 24, 38, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .glass-nav {
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+  .dark .glass-nav {
+    background: rgba(10, 15, 26, 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .glow-teal {
+    box-shadow: 0 0 35px -5px rgba(13, 148, 136, 0.35);
+  }
+  .glow-blue {
+    box-shadow: 0 0 35px -5px rgba(14, 165, 233, 0.35);
+  }
+  .bg-grid-pattern {
+    background-image: radial-gradient(rgba(13, 148, 136, 0.12) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .dark .bg-grid-pattern {
+    background-image: radial-gradient(rgba(45, 212, 191, 0.15) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+}
