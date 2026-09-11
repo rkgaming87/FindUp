@@ -32,7 +32,8 @@ import { ThemeToggle } from "@/components/theme-toggle";
 
 const navLinks = [
   { href: "/browse", label: "Browse Items", icon: Compass },
-  { href: "/about", label: "About FindUp", icon: Info },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/about", label: "About", icon: Info },
 ];
 
 export function Navbar() {
