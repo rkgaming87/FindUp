@@ -1258,10 +1258,18 @@ var notificationRouter_default = router6;
 import cors from "cors";
 dotenv3.config();
 var app = express8();
+app.set("trust proxy", 1);
 var PORT = process.env.PORT || 8005;
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://findup-tau.vercel.app"],
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      const isAllowed = origin.startsWith("http://localhost:") || origin.endsWith(".vercel.app") || process.env.CLIENT_URL && origin === process.env.CLIENT_URL;
+      if (isAllowed) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
     credentials: true
   })
 );
