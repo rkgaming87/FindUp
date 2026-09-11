@@ -8,14 +8,12 @@ export interface RegisterData {
 }
 
 export async function registerUser(data: RegisterData) {
-  console.log("data : ", data);
   try {
     const res = await api.post("/auth/register", data);
-    console.log("data : ", res.data);
     return res.data;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Registration error:", error);
-    throw error;
+    throw error.response?.data?.message || "Registration failed. Please try again.";
   }
 }
 

@@ -12,6 +12,7 @@ import {
   CheckCircle2,
   ArrowRight,
   Sparkles,
+  AlertCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,6 +39,7 @@ export default function RegisterPage() {
     password: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [serverError, setServerError] = useState<string | null>(null);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -73,16 +75,16 @@ export default function RegisterPage() {
 
     if (!validateForm()) return;
 
+    setServerError(null);
     setIsLoading(true);
     try {
       await registerUser(formData);
       setIsSuccess(true);
       toast.success("Account created successfully!");
     } catch (error: any) {
-      toast.error(
-        error.response?.data?.message ||
-          "Registration failed. Please try again."
-      );
+      const msg = typeof error === "string" ? error : error?.response?.data?.message || "Registration failed. Please try again.";
+      setServerError(msg);
+      toast.error(msg);
     } finally {
       setIsLoading(false);
     }
@@ -329,6 +331,14 @@ export default function RegisterPage() {
                 })}
               </div>
             </div>
+
+              {/* Server Error Message */}
+              {serverError && (
+                <div className="mt-4 flex items-center gap-2 rounded-xl bg-destructive/10 p-3 text-xs text-destructive border border-destructive/20">
+                  <AlertCircle className="h-4 w-4 shrink-0" />
+                  <p>{serverError}</p>
+                </div>
+              )}
 
             {/* Submit Button */}
             <div className="pt-2">

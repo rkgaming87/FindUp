@@ -64,33 +64,47 @@ async function signUp(req, res) {
   try {
     const { fullName, email, username, password } = req.body;
     if (!fullName || !email || !username || !password) {
-      return res.status(400).json({ message: "name, email, username, password required" });
+      return res.status(400).json({ message: "Full name, email, username, and password are required." });
     }
-    const existingUser = await userModel_default.findOne({ username });
+    const trimmedUsername = username.trim();
+    const trimmedEmail = email.trim().toLowerCase();
+    const existingUser = await userModel_default.findOne({
+      $or: [{ username: trimmedUsername }, { email: trimmedEmail }]
+    });
     if (existingUser) {
+      if (existingUser.username === trimmedUsername) {
+        return res.status(409).json({
+          message: "This Username / Student ID is already registered! Please log in or use a different one."
+        });
+      }
       return res.status(409).json({
-        message: "Username already registered!"
+        message: "This Email address is already registered! Please log in."
       });
     }
     const user = await userModel_default.create({
-      fullName,
-      email,
-      username,
+      fullName: fullName.trim(),
+      email: trimmedEmail,
+      username: trimmedUsername,
       password: await bcrypt.hash(password, 10),
       role: "USER",
       status: "ACTIVE"
     });
-    if (!!user) {
+    if (user) {
       return res.status(201).json({
-        message: "User Registered successfully!"
+        message: "User registered successfully!"
       });
     } else {
-      throw new Error("Unexpected Error!");
+      throw new Error("Unexpected error occurred while creating user.");
     }
   } catch (err) {
-    res.status(500).json({
-      message: err && typeof err === "object" && "message" in err ? err.message : "Unknown error occured!",
-      status: 404
+    if (err && (err.code === 11e3 || err.name === "MongoServerError")) {
+      const field = Object.keys(err.keyPattern || {})[0] || "Username or Email";
+      return res.status(409).json({
+        message: `${field === "email" ? "Email address" : "Username"} is already registered! Please log in.`
+      });
+    }
+    return res.status(500).json({
+      message: err?.message || "Internal server error occurred."
     });
   }
 }
